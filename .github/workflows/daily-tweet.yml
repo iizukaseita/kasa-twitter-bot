@@ -1,0 +1,30 @@
+name: Daily Kumosuke Tweet
+
+on:
+  schedule:
+    # 毎朝7:00 JST = 22:00 UTC (前日)
+    - cron: '0 22 * * *'
+  workflow_dispatch: # 手動実行も可能
+
+jobs:
+  tweet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Post daily tweet
+        working-directory: src
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_KEY_SECRET: ${{ secrets.X_API_KEY_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+        run: python tweet.py

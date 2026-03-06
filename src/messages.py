@@ -66,26 +66,30 @@ def detail_text(precip_prob, precip_max, temp_max, temp_min):
     return ""
 
 
-def build_tweet(city_name, pref, weather_type, precip_prob=None, precip_max=None, temp_max=None, temp_min=None):
+def build_tweet(area_name, city_name, pref, weather_type, precip_prob=None, precip_max=None, temp_max=None, temp_min=None):
     """
+    area_name: 表示名（例: "札幌市中央区"）
+    city_name: 市名（例: "札幌市"）
     weather_type: "rain", "snow", "cloudy", "sunny"
     """
     greeting = random.choice(GREETINGS)
     
     if weather_type == "rain":
-        body = random.choice(RAIN_MESSAGES).format(city=city_name)
+        body = random.choice(RAIN_MESSAGES).format(city=area_name)
     elif weather_type == "snow":
-        body = random.choice(SNOW_MESSAGES).format(city=city_name)
+        body = random.choice(SNOW_MESSAGES).format(city=area_name)
     elif weather_type == "cloudy":
-        body = random.choice(CLOUDY_MESSAGES).format(city=city_name)
+        body = random.choice(CLOUDY_MESSAGES).format(city=area_name)
     else:
-        body = random.choice(SUNNY_MESSAGES).format(city=city_name)
+        body = random.choice(SUNNY_MESSAGES).format(city=area_name)
     
     detail = detail_text(precip_prob, precip_max, temp_max, temp_min)
     
     # Clean pref name for hashtag (remove 県/府/都)
     pref_tag = pref.replace("県", "").replace("府", "").replace("都", "")
-    closing = random.choice(CLOSINGS).format(city=city_name, pref=pref_tag)
+    # Clean city name for hashtag (remove 市/町/村)
+    city_tag = city_name.replace("市", "").replace("町", "").replace("村", "")
+    closing = random.choice(CLOSINGS).format(city=city_tag, pref=pref_tag)
     
     tweet = f"{greeting}\n{body}\n{detail}{closing}"
     

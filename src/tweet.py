@@ -75,7 +75,9 @@ def post_tweet(text: str):
 def main():
     # ランダムに都市を選択
     city = random.choice(CITIES)
-    print(f"Selected city: {city['name']} ({city['pref']})")
+    # 表示名を組み立て（例: "札幌市中央区", "川口市" など）
+    area_name = city["city"] + city["name"] if city["name"] not in city["city"] else city["city"]
+    print(f"Selected area: {area_name} ({city['pref']})")
 
     # 天気取得
     weather = get_weather(city["lat"], city["lon"])
@@ -94,7 +96,8 @@ def main():
 
     # ツイート生成
     tweet_text = build_tweet(
-        city_name=city["name"],
+        area_name=area_name,
+        city_name=city["city"],
         pref=city["pref"],
         weather_type=weather_type,
         precip_prob=weather["precip_prob"],
